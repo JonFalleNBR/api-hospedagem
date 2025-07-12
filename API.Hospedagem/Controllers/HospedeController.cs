@@ -35,6 +35,7 @@ namespace API.Hospedagem.Controllers
             if (dto is null) { 
                 return NotFound(); // Retorna 404 Not Found se o hóspede não for encontrado
             }
+            Thread.Sleep(5000); // Simula uma espera de 5 segundos para fins de demonstração
             return Ok(dto); // Retorna 200 OK com os dados do hóspede
         }
 
