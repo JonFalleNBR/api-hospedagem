@@ -1,6 +1,10 @@
 using API.Hospedagem.Data;
 using Microsoft.EntityFrameworkCore;
 using API.Hospedagem.Models;
+using API.Hospedagem.Services.Implementations;
+using API.Hospedagem.Services.Interfaces;
+using AutoMapper;
+using API.Hospedagem.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +14,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IHospedeService, HospedeService>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddDbContext<ApplicationDbContext>(opts =>
     opts.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
+
     )
 );
 
