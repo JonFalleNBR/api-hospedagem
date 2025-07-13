@@ -16,5 +16,6 @@ namespace API.Hospedagem.Services.Interfaces
 
 
 
+
     }
 }
