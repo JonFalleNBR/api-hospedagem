@@ -18,7 +18,7 @@ namespace API.Hospedagem.Controllers
              _service = service;
 
         }
-        // implementar os métodos do controller com as // chamadas para o serviço IHospedeService
+      
 
         // GET api/hospede
         [HttpGet]
@@ -33,17 +33,17 @@ namespace API.Hospedagem.Controllers
         public async Task<ActionResult<HospedeReadDto>> GetById(int id) { 
             var dto = await _service.GetByIdAsync(id);
             if (dto is null) { 
-                return NotFound(); // Retorna 404 Not Found se o hóspede não for encontrado
+                return NotFound();
             }
-            Thread.Sleep(5000); // Simula uma espera de 5 segundos para fins de demonstração
-            return Ok(dto); // Retorna 200 OK com os dados do hóspede
+            Thread.Sleep(5000); 
+            return Ok(dto); 
         }
 
         // POST api/hospede
         [HttpPost]
         public async Task<ActionResult<HospedeReadDto>> Create(HospedeCreateDto dto) {
             var criado = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = criado.Id }, criado); // retorna um 201 Created com o local do recurso criado
+            return CreatedAtAction(nameof(GetById), new { id = criado.Id }, criado); 
             // return CreatedAtAction("GetHospedeById", new { id = criado.Id }, criado); 
         }
 
@@ -53,7 +53,7 @@ namespace API.Hospedagem.Controllers
         public async Task<IActionResult> Update(int id, HospedeCreateDto dto)
         {
             var atualizado = await _service.UpdateAsync(id, dto);
-            return atualizado ? NoContent() : NotFound(); // if ternario que define o Retorno de um 204 No Content se atualizado com sucesso, ou 404 Not Found se não encontrado
+            return atualizado ? NoContent() : NotFound(); 
 
 
         }

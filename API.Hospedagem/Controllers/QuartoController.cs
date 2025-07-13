@@ -47,8 +47,7 @@ namespace API.Hospedagem.Controllers
         [HttpPost]
         public async Task<ActionResult<QuartoReadDto>> Create(QuartoCreateDto dto) { 
             var criado = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = criado.Id }, criado); // retorna um 201 Created com o local do recurso criado
-
+            return CreatedAtAction(nameof(GetById), new { id = criado.Id }, criado); 
 
         }
 
