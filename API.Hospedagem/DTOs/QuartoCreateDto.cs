@@ -19,7 +19,5 @@ namespace API.Hospedagem.DTOs
         public double Preco { get; set; } // Preço do quarto
 
 
-
-
     }
 }
