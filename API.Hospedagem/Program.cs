@@ -15,6 +15,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IHospedeService, HospedeService>();
+builder.Services.AddScoped<IQuartoService, QuartoService>();
+//builder.Services.AddScoped<IReservaService, ReservaService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<ApplicationDbContext>(opts =>
