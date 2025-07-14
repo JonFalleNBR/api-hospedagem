@@ -15,6 +15,7 @@ namespace API.Hospedagem.Controllers
 
 
 
+
         public QuartoController(IQuartoService service)
         {
             _service = service;
