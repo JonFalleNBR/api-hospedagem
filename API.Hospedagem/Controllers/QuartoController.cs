@@ -70,6 +70,7 @@ namespace API.Hospedagem.Controllers
         public async Task<IActionResult> Delete(int id)
         {
 
+
             var deletado = await _service.DeleteAsync(id);
             return deletado ? NoContent() : NotFound();
 
