@@ -18,7 +18,7 @@ namespace API.Hospedagem.Profiles
 
             // demais mappings...
             CreateMap<Quarto, QuartoReadDto>()
-       .ForMember(dest => dest.Preco,
+                   .ForMember(dest => dest.Preco,
                   opt => opt.MapFrom(src => src.PrecoPorNoite));
 
             CreateMap<QuartoCreateDto, Quarto>()
@@ -31,10 +31,14 @@ namespace API.Hospedagem.Profiles
 
 
             CreateMap<Reserva, ReservaReadDto>();
-            CreateMap<ReservaCreateDto, Reserva>();
+            CreateMap<ReservaCreateDto, Reserva>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.ValorTotal, opt => opt.Ignore())   
+                .ForMember(dest => dest.Quarto, opt => opt.Ignore())    
+                .ForMember(dest => dest.Hospede, opt => opt.Ignore());   
 
         }
 
     }
-    }
+   }
 
