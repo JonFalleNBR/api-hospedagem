@@ -10,7 +10,7 @@ namespace API.Hospedagem.DTOs
         public int HospedeId { get; set; }
 
         [Required]
-        public ReservaReadDto QuartoId { get; set; }
+        public int QuartoId { get; set; }
 
 
         [Required]

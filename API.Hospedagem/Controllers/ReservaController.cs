@@ -50,7 +50,9 @@ namespace API.Hospedagem.Controllers
 
             if (criado == null) return BadRequest("Quarto não disponível para reserva ou não encontrado");
 
-            return CreatedAtRoute(nameof(GetById), new { id = criado.id }, criado);
+            // TODO -> adicionar logica que se um hospede ja tiver alugado um quarto, ele nao pode alugar outro
+
+            return CreatedAtRoute("GetReservaById", new { id = criado.id }, criado);
 
 
         }
@@ -65,6 +67,8 @@ namespace API.Hospedagem.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
+
+            // TODO - ao atualizar os dados da reserva e marcar o checkou, ele deve dar o update no status do quarto de volta para 0 para futuras reservas
 
             var resultado = await _service.DeleteAsync(id);
             return resultado ? NoContent() : NotFound();
