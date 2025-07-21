@@ -1,4 +1,6 @@
-﻿namespace API.Hospedagem.DTOs
+﻿using API.Hospedagem.Models;
+
+namespace API.Hospedagem.DTOs
 {
     public class ReservaReadDto
     {
@@ -7,7 +9,7 @@
 
         public int id { get; set; }
 
-        public int HosoedeId { get; set; }
+        public int HospedeId { get; set; }
 
         public int QuartoId { get; set; }
 

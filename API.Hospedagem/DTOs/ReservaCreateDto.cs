@@ -7,10 +7,11 @@ namespace API.Hospedagem.DTOs
         // Dados de entrada para criar reserva 
 
         [Required]
-        public int id { get; set; }
+        public int HospedeId { get; set; }
 
         [Required]
-        public int QuartoId { get; set; }
+        public ReservaReadDto QuartoId { get; set; }
+
 
         [Required]
         public DateTime dataCheckin { get; set; }

@@ -91,7 +91,7 @@ namespace API.Hospedagem.Services.Implementations
         public async Task<bool> DeleteAsync(int id)
         {
 
-            var reserva = await _context.FindAsync(id);
+            var reserva = await _context.Reservas.FindAsync(id);
             if (reserva == null) return false;
 
             _context.Reservas.Remove(reserva);
