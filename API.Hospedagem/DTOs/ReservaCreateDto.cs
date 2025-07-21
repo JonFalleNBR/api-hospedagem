@@ -10,13 +10,13 @@ namespace API.Hospedagem.DTOs
         public int id { get; set; }
 
         [Required]
-        public int QaurtoId { get; set; }
+        public int QuartoId { get; set; }
 
         [Required]
         public DateTime dataCheckin { get; set; }
 
 
-        public DateTime dataCheckout { get; set; }
+        public DateTime? dataCheckout { get; set; }
 
         public string? statusReserva { get; set; }
 
