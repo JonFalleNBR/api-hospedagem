@@ -21,6 +21,12 @@ namespace API.Hospedagem.Data
         public virtual DbSet<Quarto> Quartos { get; set; } = null!;
         public virtual DbSet<Reserva> Reservas { get; set; } = null!;
 
+        public virtual DbSet<Cargo> Cargos { get; set; }
+        public virtual DbSet<Funcionario> Funcionarios { get; set; }
+
+
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
