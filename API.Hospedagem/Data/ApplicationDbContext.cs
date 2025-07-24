@@ -113,7 +113,7 @@ namespace API.Hospedagem.Data
 
             modelBuilder.Entity<Cargo>(entity =>
             {
-                entity.ToTable("Cargos");
+                entity.ToTable("Cargo");
                 entity.HasKey(c => c.Id);
                 entity.Property(c => c.Nome)
                       .IsRequired()
@@ -123,7 +123,7 @@ namespace API.Hospedagem.Data
 
             modelBuilder.Entity<Funcionario>(entity =>
             {
-                entity.ToTable("Funcionarios");
+                entity.ToTable("Funcionario");
                 entity.HasKey(f => f.Id);
 
                 entity.Property(f => f.Nome)

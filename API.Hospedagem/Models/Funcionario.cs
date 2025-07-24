@@ -19,6 +19,10 @@
 
         // Defiindo a FK do Cargo 
         public int CargoId { get; set; }
+
+
+        public string CargoNome => Cargo.Nome;
+
         public Cargo Cargo { get; set; } = null!;
 
 

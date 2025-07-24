@@ -43,9 +43,14 @@ namespace API.Hospedagem.Profiles
 
             CreateMap<Cargo, CargoReadDto>();
 
+
+            CreateMap<FuncionarioCreateDto, Funcionario>()
+           .ForMember(dest => dest.Id, opt => opt.Ignore())
+           .ForMember(dest => dest.CargoId, opt => opt.MapFrom(src => src.CargoId));
+
             CreateMap<Funcionario, FuncionarioReadDto>()
-                .ForMember(dest => dest.CargoNome,
-                           opt => opt.MapFrom(src => src.Cargo.Nome));
+             .ForMember(dest => dest.CargoNome, opt => opt.MapFrom(src => src.Cargo.Nome));
+
 
 
         }
