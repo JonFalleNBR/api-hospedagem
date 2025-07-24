@@ -19,7 +19,7 @@
 
         // Defiindo a FK do Cargo 
         public int CargoId { get; set; }
-        public Cargo cargo { get; set; } = null!;
+        public Cargo Cargo { get; set; } = null!;
 
 
 

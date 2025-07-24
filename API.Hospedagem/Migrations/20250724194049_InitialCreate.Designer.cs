@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Hospedagem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250712063738_MapearTabelasSingulares")]
-    partial class MapearTabelasSingulares
+    [Migration("20250724194049_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,24 @@ namespace API.Hospedagem.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("API.Hospedagem.Models.Hospede", b =>
+            modelBuilder.Entity("API.Hospedagem.Models.Cargo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cargos");
+                });
+
+            modelBuilder.Entity("API.Hospedagem.Models.Funcionario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,26 +51,74 @@ namespace API.Hospedagem.Migrations
 
                     b.Property<string>("CPF")
                         .IsRequired()
-                        .HasMaxLength(14)
-                        .HasColumnType("nvarchar(14)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DataCadastro")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("CargoId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Endereco")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CargoId");
+
+                    b.ToTable("Funcionarios");
+                });
+
+            modelBuilder.Entity("API.Hospedagem.Models.Hospede", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Cpf")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(14)")
+                        .HasColumnName("CPF");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("Email")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(30)");
 
                     b.Property<string>("Telefone")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Cpf" }, "UQ__Hospede__C1F8973133CEFA5D")
+                        .IsUnique();
 
                     b.ToTable("Hospede", (string)null);
                 });
@@ -70,16 +135,21 @@ namespace API.Hospedagem.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("PrecoPorNoite")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("Tipo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Numero" }, "UQ__Quarto__7E532BC6DDAE882A")
+                        .IsUnique();
 
                     b.ToTable("Quarto", (string)null);
                 });
@@ -93,10 +163,10 @@ namespace API.Hospedagem.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("DataCheckin")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime?>("DataCheckout")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<int>("HospedeId")
                         .HasColumnType("int");
@@ -107,10 +177,11 @@ namespace API.Hospedagem.Migrations
                     b.Property<string>("StatusReserva")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<decimal?>("ValorTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
@@ -121,23 +192,39 @@ namespace API.Hospedagem.Migrations
                     b.ToTable("Reserva", (string)null);
                 });
 
+            modelBuilder.Entity("API.Hospedagem.Models.Funcionario", b =>
+                {
+                    b.HasOne("API.Hospedagem.Models.Cargo", "cargo")
+                        .WithMany("Funcionarios")
+                        .HasForeignKey("CargoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("cargo");
+                });
+
             modelBuilder.Entity("API.Hospedagem.Models.Reserva", b =>
                 {
                     b.HasOne("API.Hospedagem.Models.Hospede", "Hospede")
                         .WithMany("Reservas")
                         .HasForeignKey("HospedeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Reserva_Hospede");
 
                     b.HasOne("API.Hospedagem.Models.Quarto", "Quarto")
                         .WithMany("Reservas")
                         .HasForeignKey("QuartoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Reserva_Quarto");
 
                     b.Navigation("Hospede");
 
                     b.Navigation("Quarto");
+                });
+
+            modelBuilder.Entity("API.Hospedagem.Models.Cargo", b =>
+                {
+                    b.Navigation("Funcionarios");
                 });
 
             modelBuilder.Entity("API.Hospedagem.Models.Hospede", b =>
