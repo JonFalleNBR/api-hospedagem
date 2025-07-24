@@ -21,7 +21,7 @@ namespace API.Hospedagem.Data
         public virtual DbSet<Quarto> Quartos { get; set; } = null!;
         public virtual DbSet<Reserva> Reservas { get; set; } = null!;
 
-        public virtual DbSet<Cargo> Cargos { get; set; }
+        public virtual DbSet<Cargo> Cargos { get; set; } = null!;
         public virtual DbSet<Funcionario> Funcionarios { get; set; }
 
 
@@ -109,6 +109,35 @@ namespace API.Hospedagem.Data
             });
 
             OnModelCreatingPartial(modelBuilder);
+
+
+            modelBuilder.Entity<Cargo>(entity =>
+            {
+                entity.ToTable("Cargo");
+                entity.HasKey(c => c.Id);
+                entity.Property(c => c.Nome)
+                      .IsRequired()
+                      .HasMaxLength(50)
+                      .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Funcionario>(entity =>
+            {
+                entity.ToTable("Funcionario");
+                entity.HasKey(f => f.Id);
+
+                entity.Property(f => f.Nome)
+                      .IsRequired()
+                      .HasMaxLength(40)
+                      .IsUnicode(false);
+                // ... CPF, Email, Telefone, Endereco
+
+                entity.HasOne(f => f.Cargo)
+                      .WithMany(c => c.Funcionarios)
+                      .HasForeignKey(f => f.CargoId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
