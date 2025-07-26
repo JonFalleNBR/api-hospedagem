@@ -14,6 +14,7 @@ namespace API.Hospedagem.Services.Implementations
         private readonly IMapper _mapper;
 
 
+
         public HospedeService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
