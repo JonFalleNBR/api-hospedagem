@@ -25,6 +25,7 @@ namespace API.Hospedagem.Services.Implementations
         public async Task<HospedeReadDto?> CreateAsync(HospedeCreateDto dto)
         {
             var entity = _mapper.Map<Hospede>(dto);
+
             _context.Hospedes.Add(entity);
             await _context.SaveChangesAsync();
             return _mapper.Map<HospedeReadDto>(entity);
