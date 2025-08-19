@@ -119,6 +119,12 @@ namespace API.Hospedagem.Data
                       .IsRequired()
                       .HasMaxLength(50)
                       .IsUnicode(false);
+
+                entity.Property(c => c.Permissao)
+                      .IsRequired()
+                      .HasDefaultValue(2);
+
+                entity.HasCheckConstraint("CK_Cargo_Permissao","[Permissao] IN (1,2)");
             });
 
             modelBuilder.Entity<Funcionario>(entity =>
@@ -137,6 +143,10 @@ namespace API.Hospedagem.Data
                       .HasForeignKey(f => f.CargoId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
+
+
+   
+
 
         }
 

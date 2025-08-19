@@ -18,6 +18,7 @@ builder.Services.AddScoped<IHospedeService, HospedeService>();
 builder.Services.AddScoped<IQuartoService, QuartoService>();
 builder.Services.AddScoped<IReservaService, ReservaService>();
 builder.Services.AddScoped<IFuncionarioService, FuncionarioService>();
+builder.Services.AddScoped<ICargoService, CargoService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
