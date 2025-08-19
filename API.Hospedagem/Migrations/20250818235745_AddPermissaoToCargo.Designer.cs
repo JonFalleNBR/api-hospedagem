@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Hospedagem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250724194049_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250818235745_AddPermissaoToCargo")]
+    partial class AddPermissaoToCargo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,11 +34,20 @@ namespace API.Hospedagem.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<int>("Permissao")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(2);
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cargos");
+                    b.ToTable("Cargo", (string)null);
+
+                    b.HasCheckConstraint("CK_Cargo_Permissao", "[Permissao] IN (1,2)");
                 });
 
             modelBuilder.Entity("API.Hospedagem.Models.Funcionario", b =>
@@ -66,7 +75,9 @@ namespace API.Hospedagem.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(40)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(40)");
 
                     b.Property<string>("Telefone")
                         .IsRequired()
@@ -76,7 +87,7 @@ namespace API.Hospedagem.Migrations
 
                     b.HasIndex("CargoId");
 
-                    b.ToTable("Funcionarios");
+                    b.ToTable("Funcionario", (string)null);
                 });
 
             modelBuilder.Entity("API.Hospedagem.Models.Hospede", b =>
@@ -194,13 +205,13 @@ namespace API.Hospedagem.Migrations
 
             modelBuilder.Entity("API.Hospedagem.Models.Funcionario", b =>
                 {
-                    b.HasOne("API.Hospedagem.Models.Cargo", "cargo")
+                    b.HasOne("API.Hospedagem.Models.Cargo", "Cargo")
                         .WithMany("Funcionarios")
                         .HasForeignKey("CargoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("cargo");
+                    b.Navigation("Cargo");
                 });
 
             modelBuilder.Entity("API.Hospedagem.Models.Reserva", b =>

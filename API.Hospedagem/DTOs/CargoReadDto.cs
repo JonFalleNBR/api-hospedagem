@@ -6,8 +6,7 @@
         
             public string Nome { get; set; } = null!;
 
-
-
+              public int Permissao { get; set; }  
 
     }
 }

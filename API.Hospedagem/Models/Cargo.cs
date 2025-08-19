@@ -7,6 +7,10 @@
         public string Nome { get; set; } = null!;
 
 
+
+        public int Permissao { get; set; }
+
+
         public ICollection<Funcionario> Funcionarios { get; set; } = new List<Funcionario>();
 
 
