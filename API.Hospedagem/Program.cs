@@ -19,6 +19,21 @@ builder.Services.AddScoped<IQuartoService, QuartoService>();
 builder.Services.AddScoped<IReservaService, ReservaService>();
 builder.Services.AddScoped<IFuncionarioService, FuncionarioService>();
 builder.Services.AddScoped<ICargoService, CargoService>();
+builder.Services.AddCors(
+        o => {
+            o.AddPolicy("AllowAngular",
+                        p => p.WithOrigins("http://localhost:4200/")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+
+
+
+                });
+        
+    
+  
+
+    
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -44,6 +59,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("AllowAngular");
+
 
 app.Run();
 

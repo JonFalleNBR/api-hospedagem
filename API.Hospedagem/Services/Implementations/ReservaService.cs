@@ -53,7 +53,7 @@ namespace API.Hospedagem.Services.Implementations
             }
 
             var reserva = _mapper.Map<Reserva>(dto);
-            reserva.StatusReserva =  dto.statusReserva ?? "Disponível";
+            reserva.StatusReserva =  dto.statusReserva ?? "Ativa";
             _context.Reservas.Add(reserva);
 
             quarto.Status = 1;
@@ -77,7 +77,11 @@ namespace API.Hospedagem.Services.Implementations
             _mapper.Map(dto, reserva);
 
             if (dto.dataCheckout.HasValue) { 
-                var nights = (dto.dataCheckout.Value - dto.dataCheckin).Days;
+                var nights = (dto.dataCheckout.Value.Date - dto.dataCheckin.Date).Days;
+                if (nights <= 0 ) { 
+                       nights = 1; // Garantir pelo menos uma noite 
+                }
+
                 reserva.ValorTotal = nights * reserva.Quarto.PrecoPorNoite;
                 reserva.Quarto.Status = 0;
 
