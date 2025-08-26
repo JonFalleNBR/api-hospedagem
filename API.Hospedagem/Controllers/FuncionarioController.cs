@@ -45,6 +45,7 @@ namespace API.Hospedagem.Controllers
                  ? NoContent()
                  : NotFound();
 
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
             => await _srv.DeleteAsync(id)
