@@ -13,8 +13,8 @@ namespace API.Hospedagem.DTOs
         public int QuartoId { get; set; }
 
 
-        [Required]
-        public DateTime dataCheckin { get; set; }
+        //[Required]
+        //public DateTime dataCheckin { get; set; }
 
 
         public DateTime? dataCheckout { get; set; }
