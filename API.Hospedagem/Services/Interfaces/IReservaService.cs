@@ -19,5 +19,10 @@ namespace API.Hospedagem.Services.Interfaces
 
         Task<bool> DeleteAsync(int id);
 
+        Task<bool> CheckoutAsync(int reservaId, DateTime? dataCheckout = null);
+
+        Task<ReservaReadDto?> CheckinAsync(ReservaCreateDto dto);
+
+
     }
 }

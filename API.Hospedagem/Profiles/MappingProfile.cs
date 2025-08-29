@@ -39,6 +39,13 @@ namespace API.Hospedagem.Profiles
 
 
 
+            CreateMap<ReservaCreateDto, Reserva>()
+                .ForMember(d => d.DataCheckin, opt => opt.Ignore())
+                    .ForMember(d => d.DataCheckout, opt => opt.Ignore())
+                 .ForMember(d => d.ValorTotal, opt => opt.Ignore());
+            
+
+
 
 
             CreateMap<Cargo, CargoReadDto>();
