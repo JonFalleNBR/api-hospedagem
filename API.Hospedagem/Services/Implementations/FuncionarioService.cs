@@ -47,6 +47,10 @@ namespace API.Hospedagem.Services.Implementations
             var nome = dto.CargoNome.Trim().ToLower();
             int cargoId;
 
+
+            //nome.Contains("recep") || nome.Contains("gest") ? cargoId = 1 : cargoId = 2;
+
+
             if (nome.Contains("recep") || nome.Contains("gest"))
                 cargoId = 1;
             else

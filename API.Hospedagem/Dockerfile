@@ -27,3 +27,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "API.Hospedagem.dll"]
+
+
+ENV DB_CONNECTION="Server=host.docker.internal;Database=HotelDB;User=sa;Password=Lopes4732;"
