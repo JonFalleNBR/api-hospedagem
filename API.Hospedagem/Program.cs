@@ -22,7 +22,7 @@ builder.Services.AddScoped<ICargoService, CargoService>();
 builder.Services.AddCors(
         o => {
             o.AddPolicy("AllowAngular",
-                        p => p.WithOrigins("http://localhost:4200/")
+                        p => p.WithOrigins("http://localhost:4200")
                         .AllowAnyMethod()
                         .AllowAnyHeader());
 
@@ -37,12 +37,20 @@ builder.Services.AddCors(
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// Configuração do DbContext com retry logic - SQL Server - relevante para conexões instáveis e docker / compose
 builder.Services.AddDbContext<ApplicationDbContext>(opts =>
-    opts.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
+{
+    var conn = Environment.GetEnvironmentVariable("DB_CONNECTION")
+               ?? builder.Configuration.GetConnectionString("DefaultConnection");
+    opts.UseSqlServer(conn, sql =>
+    {
+        sql.EnableRetryOnFailure(
+            maxRetryCount: 10,
+            maxRetryDelay: TimeSpan.FromSeconds(5),
+            errorNumbersToAdd: null);
+    });
+});
 
-    )
-);
 
 
 var app = builder.Build();
