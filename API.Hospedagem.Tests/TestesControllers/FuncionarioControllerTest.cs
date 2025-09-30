@@ -190,10 +190,6 @@ namespace API.Hospedagem.Tests.TestesControllers
         }
 
 
-
-
-        // TODO: Implementar os testes restantes ( Create, Update, Delete)
-
         [Fact]
         public async Task Create_com_Sucesso_retorna_CreatedAtRoute_com_Payload()
         {
@@ -256,7 +252,7 @@ namespace API.Hospedagem.Tests.TestesControllers
 
 
         [Fact]
-        public async Task Update_quando_existe_retorna_NoContent()
+        public async Task Create_Com_Lancamento_de_Exception()
         {
             var input = new FuncionarioCreateDto
             {
@@ -281,6 +277,105 @@ namespace API.Hospedagem.Tests.TestesControllers
 
 
         }
+
+
+        [Fact]
+        public async Task update_quando_sucesso_retorna_noContent()
+        {
+
+
+            var dto = new FuncionarioCreateDto
+            {
+                Nome = "Ada Lovelace",
+                CPF = "12345678900",
+                Email = "ada@hotel.com",
+                Telefone = "99999-9999",
+                Endereco = "Rua X, 123",
+                CargoId = 1
+
+            };
+
+
+            _serviceMock.Setup(s => s.UpdateAsync(10, dto)).ReturnsAsync(true); // Mockando o serviço para retornar true, simulando sucesso na atualização
+
+
+
+            var resp = await _controller.Update(10, dto); // Chamando o método Update do controller
+
+
+
+
+            resp.Should().BeOfType<NoContentResult>(); // Verifica se o resultado é um NoContentResult
+
+            _serviceMock.Verify(s => s.UpdateAsync(10, dto), Times.Once); // Verifica se o método foi chamado exatamente uma vez com o input esperado
+
+
+        }
+
+        [Fact]
+        public async Task update_quando_nao_encontrado_retorna_NotFound()
+        {
+
+            var dto = new FuncionarioCreateDto
+            {
+                Nome = "Ada Lovelace",
+                CPF = "12345678900",
+                Email = "ada@hotel.com",
+                Telefone = "99999-9999",
+                Endereco = "Rua X, 123",
+                CargoId = 1
+
+
+
+            };
+
+            _serviceMock.Setup(S => S.UpdateAsync(10, dto)).ReturnsAsync(false);
+
+
+
+            var resp = await _controller.Update(10, dto);
+
+
+            resp.Should().BeOfType<NotFoundResult>();
+
+            _serviceMock.Verify(s => s.UpdateAsync(10, dto), Times.Once); // Verifica se o método foi chamado exatamente uma vez com o input esperado
+        }
+
+
+        [Fact]
+        public async Task delete_quando_sucesso_retorna_NoContent()
+        {
+
+
+
+            _serviceMock.Setup(s => s.DeleteAsync(10)).ReturnsAsync(true); // Mockando o serviço para retornar true, simulando sucesso na deleção
+
+
+            var resp = await _controller.Delete(10); // Chamando o método Delete do controller
+
+            resp.Should().BeOfType<NoContentResult>(); // Verifica se o resultado é um NoContentResult
+
+            _serviceMock.Verify(s => s.DeleteAsync(10), Times.Once); // Verifica se o método foi chamado exatamente uma vez com o input esperado
+
+
+        }
+
+        [Fact]
+        public async Task delete_quando_nao_encontrado_retorna_NotFound()
+        {
+
+
+            _serviceMock.Setup(s => s.DeleteAsync(10)).ReturnsAsync(false); // Mockando o serviço para retornar false, simulando que o funcionário não foi encontrado
+
+
+            var resp = await _controller.Delete(10);
+
+            resp.Should().BeOfType<NotFoundResult>();
+
+            _serviceMock.Verify(s => s.DeleteAsync(10), Times.Once); // Verifica se o método foi chamado exatamente uma vez com o input esperado
+
+        }
+
 
     }
 }
