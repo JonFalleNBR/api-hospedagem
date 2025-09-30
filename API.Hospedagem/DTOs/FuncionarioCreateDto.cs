@@ -21,7 +21,7 @@ namespace API.Hospedagem.DTOs
         public string Endereco { get; set; } = null!;
 
         
-        public int CargoId { get; internal set; }
+        public int CargoId { get; set; }
 
         [Required]
         public string CargoNome { get; set; }

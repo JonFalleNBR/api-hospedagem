@@ -29,7 +29,8 @@ namespace API.Hospedagem.Tests.TestesControllers
 
 
         [Fact]
-        public async Task GetById_Quando_nao_existe_deve_retornar_NotFound() {
+        public async Task GetById_Quando_nao_existe_deve_retornar_NotFound()
+        {
 
 
             // ARRANGE
@@ -50,7 +51,8 @@ namespace API.Hospedagem.Tests.TestesControllers
 
 
         [Fact]
-        public async Task GetById_Quando_existe_retorna_Ok() {
+        public async Task GetById_Quando_existe_retorna_Ok()
+        {
 
 
             // ARRANGE -> Mockando explicitamente um funcionário 
@@ -102,7 +104,8 @@ namespace API.Hospedagem.Tests.TestesControllers
 
 
         [Fact]
-        public async Task GetAll_Deve_Retornar_Ok_Com_Lista_Funcionarios() {
+        public async Task GetAll_Deve_Retornar_Ok_Com_Lista_Funcionarios()
+        {
 
             #region ARRANGE
             var esperados = new List<FuncionarioReadDto> {
@@ -144,7 +147,7 @@ namespace API.Hospedagem.Tests.TestesControllers
             var lista = ok.Value.Should().BeAssignableTo<IEnumerable<FuncionarioReadDto>>().Which;
             #endregion
 
-            _serviceMock.Verify(s => s.GetAllAsync(), Times.Once); 
+            _serviceMock.Verify(s => s.GetAllAsync(), Times.Once);
 
 
 
@@ -152,18 +155,19 @@ namespace API.Hospedagem.Tests.TestesControllers
         }
 
         [Fact]
-        public async Task GetAll_quando_vazio_retorna_Ok_com_lista_vazia() {
+        public async Task GetAll_quando_vazio_retorna_Ok_com_lista_vazia()
+        {
 
             // ARRANGE
             _serviceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<FuncionarioReadDto>()); // Simula o retorno vazio do serviço
 
 
             // ACT
-           var result = await _controller.GetAll(); // So verifica se o resultado é http eh o esperado
+            var result = await _controller.GetAll(); // So verifica se o resultado é http eh o esperado
 
 
 
-           // // ASSERT
+            // // ASSERT
 
             result.Result.Should().BeOfType<OkObjectResult>(); // Verifica se o resultado é um OkObjectResult
             var ok = result.Result as OkObjectResult; // Converte o resultado para OkObjectResult
@@ -191,11 +195,92 @@ namespace API.Hospedagem.Tests.TestesControllers
         // TODO: Implementar os testes restantes ( Create, Update, Delete)
 
         [Fact]
-        public async Task Create_Deve_Retornar_CreatedAtRoute_Com_Funcionario_Criado()
+        public async Task Create_com_Sucesso_retorna_CreatedAtRoute_com_Payload()
         {
 
-            //_serviceMock.Setup(s => s.CreateAsync()).
+
+            var input = new FuncionarioCreateDto
+            {
+
+
+                Nome = "Ada Lovelace",
+                CPF = "12345678900",
+                Email = "ada@hotel.com",
+                Telefone = "99999-9999",
+                Endereco = "Rua X, 123",
+                CargoId = 1
+
+
+            }; // Dados de entrada para criação
+
+
+            var criado = new FuncionarioReadDto
+            {
+
+                Id = 10,
+                Nome = "Ada Lovelace",
+                CPF = "12345678900",
+                Email = "ada@hotel.com",
+                Telefone = "99999-9999",
+                Endereco = "Rua X, 123",
+                CargoId = 1,
+                CargoNome = "Recepção"
+
+            }; // Dados de entrada para criação
+
+
+
+            _serviceMock.Setup(s => s.CreateAsync(input)).ReturnsAsync(criado); // Mockando o serviço para retornar o funcionário criado
+
+
+
+
+            var result = await _controller.Create(input); // Chamando o método Create do controller
+
+
+
+            result.Result.Should().BeOfType<CreatedAtRouteResult>(); // Verifica se o resultado é um CreatedAtRouteResult
+            var createdAt = result.Result as CreatedAtRouteResult; createdAt.Should().NotBeNull(); // Converte o resultado para CreatedAtRouteResult e verifica se não é nulo
+            createdAt.RouteValues!["id"].Should().Be(criado.Id); // Verifica se o id retornado é o mesmo do funcionário criado
+
+            // Assertando o payload retornado
+
+            var payload = createdAt.Value as FuncionarioReadDto;
+            payload.Should().NotBeNull();
+            payload.Should().BeEquivalentTo(criado); // Verifica se o payload retornado é equivalente ao funcionário criado
+
+            _serviceMock.Verify(s => s.CreateAsync(input), Times.Once); // Verifica se o método foi chamado exatamente uma vez com o input esperado
 
 
         }
+
+
+        [Fact]
+        public async Task Update_quando_existe_retorna_NoContent()
+        {
+            var input = new FuncionarioCreateDto
+            {
+
+
+                Nome = "Ada Lovelace",
+                CPF = "12345678900",
+                Email = "ada@hotel.com",
+                Telefone = "99999-9999",
+                Endereco = "Rua X, 123",
+                CargoId = 1
+
+
+            };
+
+            _serviceMock.Setup(s => s.CreateAsync(input)).ReturnsAsync((FuncionarioReadDto?)null); // Mockando o serviço para retornar null, simulando que o funcionário não existe
+
+            var act = async () => await _controller.Create(input);
+            await act.Should().ThrowAsync<NullReferenceException>();
+
+            _serviceMock.Verify(s => s.CreateAsync(input), Times.Once);// Verifica se o método foi chamado exatamente uma vez com o input esperado
+
+
+        }
+
+    }
 }
