@@ -8,7 +8,7 @@ namespace API.Hospedagem.Tests.TestesControllers
 {
     public class HospedeControllerTest
     {
-
+       
 
 
     }
