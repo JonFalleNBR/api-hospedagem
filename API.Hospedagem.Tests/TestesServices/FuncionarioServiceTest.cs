@@ -2,6 +2,7 @@
 using API.Hospedagem.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Xunit;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace API.Hospedagem.Tests.TestesServices
 
                 ctx.Cargos.AddRange(
                        new Models.Cargo { Id = 1, Nome = "Gerente" },
-                          new Models.Cargo { Id = 2, Nome = "Recepcionista" }
+                          new Models.Cargo { Id = 2, Nome = "Recepção" }
 
 
 
@@ -93,7 +94,7 @@ namespace API.Hospedagem.Tests.TestesServices
 
 
             lista.Should().HaveCount(1);
-            lista.First().CargoNome.Should().Be("Recepção");
+            lista.First().CargoNome.Should().Be("Gerente");
 
 
 
