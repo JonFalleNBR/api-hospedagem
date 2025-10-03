@@ -19,9 +19,10 @@ namespace API.Hospedagem.Tests.TestesServices
 
 
         // Cria um novo contexto para simular o banco de dados em memória e adiciona alguns cargos para testes
-        private static ApplicationDbContext NewCtx() { 
-        
-            
+        private static ApplicationDbContext NewCtx() {
+
+
+            // declaracao clara de opcoes para o contexto 
             var opts = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
