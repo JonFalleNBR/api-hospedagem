@@ -21,7 +21,7 @@ namespace API.Hospedagem.DTOs
         public string Endereco { get; set; } = null!;
 
         
-        public int CargoId { get; set; }
+        public int CargoId { get; set; } // antes era internal set; agora é set; em caso de problemas, rever isso
 
         [Required]
         public string CargoNome { get; set; }
