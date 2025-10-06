@@ -229,7 +229,42 @@ namespace API.Hospedagem.Tests.TestesServices
             var mapper = NewMapper();
             var service = new FuncionarioService(ctx, mapper);
 
-            // Implementação do teste para o método CreateAsync
+            // Arrange
+            var dto = new API.Hospedagem.DTOs.FuncionarioCreateDto
+            {
+                Nome = "Marcus",
+                CPF = "44444444",
+                Email = "MARKUS@gmail.com",
+                Telefone = "122222",
+                Endereco = "aaa",
+                CargoId = 1,
+                CargoNome = "Gerente"
+
+
+
+
+            };
+
+            await ctx.SaveChangesAsync();
+
+
+            // Act
+            var res = await service.CreateAsync(dto);
+
+            // Assert
+
+
+            res.Should().NotBeNull();
+            res!.Nome.Should().Be("Marcus");
+            res.CargoNome.Should().Be("Gerente");
+
+
+
+
+            ctx.Funcionarios.Should().HaveCount(1);
+            // or  ctx.Funcionarios.Count().Should().Be(1); 
+
+
 
         }
 
