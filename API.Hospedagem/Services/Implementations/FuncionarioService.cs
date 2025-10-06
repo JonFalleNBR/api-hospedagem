@@ -51,10 +51,11 @@ namespace API.Hospedagem.Services.Implementations
             //nome.Contains("recep") || nome.Contains("gest") ? cargoId = 1 : cargoId = 2;
 
 
-            if (nome.Contains("recep") || nome.Contains("gest"))
+            if (nome.Contains("recep") || nome.Contains("gest") || nome.Contains("geren"))
                 cargoId = 1;
             else
                 cargoId = 2;
+
 
             // 2) montar a entidade
             var f = new Funcionario
