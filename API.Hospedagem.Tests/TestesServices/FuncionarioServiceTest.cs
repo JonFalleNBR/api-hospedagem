@@ -276,7 +276,31 @@ namespace API.Hospedagem.Tests.TestesServices
             var ctx = NewCtx();
             var mapper = NewMapper();
             var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método CreateAsync com dados inválidos
+
+
+            // Arrange: DTO com nome vazio e CPF nulo (dados inválidos)
+            var dto = new API.Hospedagem.DTOs.FuncionarioCreateDto
+            {
+                Nome = null, // Nome inválido
+                CPF = null, // CPF inválido
+                Email = "email@teste.com",
+                Telefone = "12345",
+                Endereco = "Rua Teste",
+                CargoId = 1 // Cargo válido, mas outros campos inválidos
+            };
+
+            //await ctx.SaveChangesAsync(); --> Nao precisa salvar o contexto aqui, pois o teste é sobre a validação dos dados de entrada antes de qualquer operação de banco de dados. - se usa saveChanges() apenas quando quer persistir algo no banco de dados. -> new Funcionario ok - new FuncionarioCreateDto nao
+
+
+
+            // Act
+
+            var res = await service.CreateAsync(dto);
+
+
+            // Assert
+            res.Should().BeNull();
+          
         }
 
 

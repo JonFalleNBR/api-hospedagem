@@ -44,6 +44,19 @@ namespace API.Hospedagem.Services.Implementations
         public async Task<FuncionarioReadDto?> CreateAsync(FuncionarioCreateDto dto)
         {
 
+
+            // Validação defensiva para campos obrigatórios mínimos e tratamento para casos nulos ou inválidos
+            if (dto == null ||
+                string.IsNullOrWhiteSpace(dto.Nome) || dto.Nome.Length < 3 ||
+                string.IsNullOrWhiteSpace(dto.CPF) ||
+                string.IsNullOrWhiteSpace(dto.Email) ||
+                string.IsNullOrWhiteSpace(dto.Telefone) ||
+                string.IsNullOrWhiteSpace(dto.Endereco) ||
+                string.IsNullOrWhiteSpace(dto.CargoNome))
+            {
+                return null;
+            }
+
             var nome = dto.CargoNome.Trim().ToLower();
             int cargoId;
 
@@ -55,7 +68,6 @@ namespace API.Hospedagem.Services.Implementations
                 cargoId = 1;
             else
                 cargoId = 2;
-
 
             // 2) montar a entidade
             var f = new Funcionario
