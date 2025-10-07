@@ -304,14 +304,37 @@ namespace API.Hospedagem.Tests.TestesServices
         }
 
 
-
         [Fact]
-        public async Task Create_com_cargo_inexistente_retorna_null()
+        public async Task Create_com_cargo_diferente_de_gest_rep_retorna_2()
         {
             var ctx = NewCtx();
             var mapper = NewMapper();
             var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método CreateAsync com cargo inexistente
+
+
+            // Arrange: DTO com CargoId que não existe no banco de dados
+            var dto = new API.Hospedagem.DTOs.FuncionarioCreateDto
+            {
+                Nome = "Marcus",
+                CPF = "44444444",
+                Email = "MARKUS@gmail.com",
+                Telefone = "122222",
+                Endereco = "aaa",
+                CargoId = 0,
+                CargoNome = "lixeiro"
+
+            };
+
+
+            // act 
+            var res = await service.CreateAsync(dto);
+            
+            
+            // Assert
+
+            res.Should().NotBeNull();
+            res!.CargoId.Should().Be(2);
+
         }
 
 
