@@ -1,4 +1,5 @@
 ﻿using API.Hospedagem.Data;
+using API.Hospedagem.DTOs;
 using API.Hospedagem.Models;
 using API.Hospedagem.Services.Implementations;
 using API.Hospedagem.Services.Interfaces;
@@ -338,43 +339,6 @@ namespace API.Hospedagem.Tests.TestesServices
         }
 
 
-        [Fact]
-        public async Task Create_com_cargo_nulo_retorna_null()
-        {
-            var ctx = NewCtx();
-            var mapper = NewMapper();
-            var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método CreateAsync com cargo nulo
-        }
-
-        [Fact]
-        public async Task Create_com_cargo_vazio_retorna_null()
-        {
-            var ctx = NewCtx();
-            var mapper = NewMapper();
-            var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método CreateAsync com cargo vazio
-        }
-
-        [Fact]
-        public async Task Create_com_cargo_espacos_retorna_null()
-        {
-            var ctx = NewCtx();
-            var mapper = NewMapper();
-            var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método CreateAsync com cargo contendo apenas espaços
-        }
-
-
-        [Fact]
-        public async Task Create_com_cargo_numerico_retorna_null()
-        {
-            var ctx = NewCtx();
-            var mapper = NewMapper();
-            var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método CreateAsync com cargo numérico
-        }
-
 
         [Fact]
         public async Task Update_Caso_de_Sucesso()
@@ -382,8 +346,67 @@ namespace API.Hospedagem.Tests.TestesServices
             var ctx = NewCtx();
             var mapper = NewMapper();
             var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método UpdateAsync com cargo contendo caracteres especiais
+
+
+
+            // Arrange: Adiciona um funcionário existente ao contexto
+            var funcionrioExistete = new Models.Funcionario
+            {
+
+                Nome = "Jill Valentine",
+                CPF = "12345678900",
+                Email = "jill@hotel.com",
+                Telefone = "91234-5678",
+                Endereco = "Rua A, 1443",
+                CargoId = 1 // "Gerente"
+
+
+
+            }; 
+
+            ctx.Funcionarios.Add(funcionrioExistete);
+
+            await ctx.SaveChangesAsync();
+
+            var id = funcionrioExistete.Id;
+
+            //ACT 
+            var dtoUpate = new API.Hospedagem.DTOs.FuncionarioCreateDto
+            {
+
+                Nome = "Jill V.",
+                CPF = "99999999999",
+                Email = "jillv@hotel.com",
+                Telefone = "99999-9999",
+                Endereco = "Rua B, 2000",
+                CargoId = 1,
+                CargoNome = "Recepção"
+
+            };
+
+
+            var res = await service.UpdateAsync(id, dtoUpate);
+
+            //Assert
+            res.Should().BeTrue(); // Verifica se o retorno é true, indicando sucesso na atualização
+
+
+            // Verifica se os dados foram atualizados no banco
+            var atualizado = await ctx.Funcionarios.FindAsync(id);
+            atualizado.Should().NotBeNull();
+            atualizado!.Nome.Should().Be("Jill V.");
+            atualizado.CPF.Should().Be("99999999999");
+            atualizado.Email.Should().Be("jillv@hotel.com");
+            atualizado.Telefone.Should().Be("99999-9999");
+            atualizado.Endereco.Should().Be("Rua B, 2000");
+            atualizado.CargoId.Should().Be(1);
+
+
         }
+
+
+
+
 
         [Fact]
         public async Task Update_com_id_inexistente_retorna_null()
@@ -391,8 +414,30 @@ namespace API.Hospedagem.Tests.TestesServices
             var ctx = NewCtx();
             var mapper = NewMapper();
             var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método UpdateAsync com ID inexistente
+
+            var FuncionarioInexistente = new FuncionarioCreateDto
+            {
+
+                Nome = "X",
+                CPF = "123",
+                Email = "x@x.com",
+                Telefone = "9",
+                Endereco = "Y",
+                CargoNome = "Recepção"
+
+
+            }; 
+
+            var ok = await service.UpdateAsync(999, FuncionarioInexistente); // 999 nao existe 
+
+            // Assert
+            ok!.Should().BeFalse(); // Verifica se o retorno é false, indicando que o funcionário não foi encontrado
+
+
+
         }
+
+       
 
         [Fact]
         public async Task Update_com_dados_invalidos_retorna_null()
@@ -400,7 +445,61 @@ namespace API.Hospedagem.Tests.TestesServices
             var ctx = NewCtx();
             var mapper = NewMapper();
             var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método UpdateAsync com dados inválidos
+
+
+            // Arrange: Adiciona um funcionário existente ao contexto
+
+            var funcionrioExistete = new Models.Funcionario
+            {
+
+                Nome = "Jill Valentine",
+                CPF = "12345678900",
+                Email = "jill@hotel.com",
+                Telefone = "91234-5678",
+                Endereco = "Rua A, 1443",
+                CargoId = 1 // "Gerente"
+
+
+
+            };
+
+
+            ctx.Funcionarios.Add(funcionrioExistete); 
+
+           await ctx.SaveChangesAsync();
+
+            // Act -> tenta atualizar com dados inválidos (nome vazio e CPF nulo)
+
+            var dtoUpate = new API.Hospedagem.DTOs.FuncionarioCreateDto
+            {
+
+                Nome = "J", // < 3 (inválido)
+                CPF = "",   // inválido
+                Email = " ",// inválido
+                Telefone = " ", // inválido
+                Endereco = "",  // inválido
+                CargoId = 1,
+                CargoNome = ""  // inválido
+
+            };
+
+            var ok = await service.UpdateAsync(funcionrioExistete.Id, dtoUpate);
+
+            // Assert
+            ok.Should().BeFalse(); // Verifica se o retorno é false, indicando falha na atualização devido a dados inválidos
+
+
+            // E garante que NÃO alterou no "banco"
+            var persisted = await ctx.Funcionarios.FindAsync(funcionrioExistete.Id);
+            persisted!.Nome.Should().Be("Jill Valentine");
+            persisted.CPF.Should().Be("12345678900");
+            persisted.Email.Should().Be("jill@hotel.com");
+            persisted.Telefone.Should().Be("91234-5678");
+            persisted.Endereco.Should().Be("Rua A, 1443");
+            persisted.CargoId.Should().Be(1);
+
+
+
         }
 
         [Fact]
@@ -409,16 +508,59 @@ namespace API.Hospedagem.Tests.TestesServices
             var ctx = NewCtx();
             var mapper = NewMapper();
             var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método DeleteAsync
+
+
+            var funcionrioExistete = new Models.Funcionario
+            {
+
+                Nome = "Jill Valentine",
+                CPF = "12345678900",
+                Email = "jill@hotel.com",
+                Telefone = "91234-5678",
+                Endereco = "Rua A, 1443",
+                CargoId = 1 // "Gerente"
+
+
+
+            };
+
+
+            ctx.Funcionarios.Add(funcionrioExistete);
+
+            await ctx.SaveChangesAsync();
+
+            //var id = funcionrioExistete.Id;
+
+
+            // act 
+            var res = await service.DeleteAsync(funcionrioExistete.Id);
+
+            // Assert
+            res.Should().BeTrue();
+            ctx.Funcionarios.Count().Should().Be(0); // Garante que o banco está vazio após a deleção
+
         }
 
         [Fact]
         public async Task Delete_com_id_inexistente_retorna_false()
         {
+            // Arrange
             var ctx = NewCtx();
             var mapper = NewMapper();
             var service = new FuncionarioService(ctx, mapper);
-            // Implementação do teste para o método DeleteAsync com ID inexistente
+
+
+            // Act
+            var ok = await service.DeleteAsync(999); // 999 nao existe
+
+
+            // Assert
+            ok.Should().BeFalse(); // Verifica se o retorno é false, indicando que o funcionário não foi encontrado
+            ctx.Funcionarios.Count().Should().Be(0); // Garante que o banco continua vazio
+
+
+
         }
+        // Ideia de melhoria para o futuro: usar o padrão de projeto "Factory" para criar os contextos e mapeadores, alem de delete cascade que contemple os FKs tambem
     }
 }
