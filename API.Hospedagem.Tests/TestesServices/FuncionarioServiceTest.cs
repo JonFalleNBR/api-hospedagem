@@ -20,6 +20,7 @@ namespace API.Hospedagem.Tests.TestesServices
     {
 
 
+        //[Setup] -> NÃO EXISTE NO XUNIT - USAR CONSTRUTOR
         // Cria um novo contexto para simular o banco de dados em memória e adiciona alguns cargos para testes
         private static ApplicationDbContext NewCtx()
         {
