@@ -108,6 +108,17 @@ namespace API.Hospedagem.Services.Implementations
         public async Task<bool> UpdateAsync(int id, FuncionarioCreateDto dto)
         {
 
+            if (dto == null ||
+               string.IsNullOrWhiteSpace(dto.Nome) || dto.Nome.Length < 3 ||
+               string.IsNullOrWhiteSpace(dto.CPF) ||
+               string.IsNullOrWhiteSpace(dto.Email) ||
+               string.IsNullOrWhiteSpace(dto.Telefone) ||
+               string.IsNullOrWhiteSpace(dto.Endereco) ||
+               string.IsNullOrWhiteSpace(dto.CargoNome))
+            {
+                return false; // falha na validação
+            }
+
             var f = await _context.Funcionarios.FindAsync(id);
             if (f == null) return false;
 
@@ -120,7 +131,9 @@ namespace API.Hospedagem.Services.Implementations
 
             // recalcular CargoId igual no Create
             var nome = dto.CargoNome.Trim().ToLower();
-            f.CargoId = nome.Contains("recep") || nome.Contains("gest") ? 1 : 2;
+            f.CargoId = (nome.Contains("recep") || nome.Contains("gest") || nome.Contains("geren")) ? 1 : 2; //  posso criar if ternario com ate 3 validacoes Or 
+
+
 
             await _context.SaveChangesAsync();
             return true;
