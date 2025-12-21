@@ -127,7 +127,7 @@ namespace API.Hospedagem.Services.Implementations
             f.CPF = dto.CPF;
             f.Email = dto.Email;
             f.Telefone = dto.Telefone;
-            f.Endereco = dto.Endereco;
+            f.Endereco = dto.Endereco; // isso deveria ser papel do AutoMapper - ajustar depois para evitar repetição de código
 
             // recalcular CargoId igual no Create
             var nome = dto.CargoNome.Trim().ToLower();
